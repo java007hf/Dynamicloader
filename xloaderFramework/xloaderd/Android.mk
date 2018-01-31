@@ -1,0 +1,28 @@
+LOCAL_PATH:= $(call my-dir)
+include $(CLEAR_VARS)
+
+SETTING_XLOADER_BIN := true
+SETTING_XLOADERD_SOCKET_PRIVATE := true
+
+LOCAL_MODULE_TAGS := optional
+
+LOCAL_PRELINK_MODULE := false
+
+ifeq ($(SETTING_XLOADER_BIN),true)
+LOCAL_MODULE := xloader
+LOCAL_SRC_FILES := xloader.c
+LOCAL_CFLAGS += -DXLOADER_BIN
+else
+LOCAL_MODULE := xloaderd
+LOCAL_SRC_FILES := xloader.c xloaderd.c
+endif
+
+ifeq ($(SETTING_XLOADERD_SOCKET_PRIVATE),true)
+LOCAL_CFLAGS += -DXLOADERD_SOCKET_PRIVATE
+endif
+
+LOCAL_CFLAGS += -DMODE_XPOSED -DDEBUG
+
+LOCAL_SHARED_LIBRARIES := liblog libdl
+
+include $(BUILD_EXECUTABLE)
